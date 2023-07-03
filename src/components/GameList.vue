@@ -148,6 +148,9 @@
         }
       },
 
+      created () {
+        document.title = '好游荐电玩'
+      },
       mounted() {
         let that = this;
         this.$nextTick(() => {
@@ -181,10 +184,10 @@
           closeOnClickModal: false,
           closeOnPressEscape: false
         }).then(() => {
-          this.dataFilePath = "pc-data.txt"
+          this.dataFilePath = "pc-data-base64.txt"
           this.loadGameData()
         }).catch(() => {
-          this.dataFilePath = "/ps4|5.txt"
+          this.dataFilePath = "ps-data-base64.txt"
           this.loadGameData()
         });
 
@@ -273,7 +276,7 @@
             // console.log(`订单号：${code}\n数量：${this.selectedCount}\n总大小：${this.selectedSize}\n${this.diskSize}\n${data}`);
             this.sendEmail(
               code, 
-              `${this.dataFilePath}\n订单号：${code}\n数量：${this.selectedCount}\n总大小：${this.selectedSize}\n${this.diskSize}\n${data}`, 
+              `${this.dataFilePath}\n单号：${code}\n数量：${this.selectedCount}\n总大小：${this.selectedSize}\n${this.diskSize}\n${data}`, 
               loading);
           }).catch(() => {
           });
@@ -288,7 +291,7 @@
             .then((result) => {
               loading.close()
               
-              this.$prompt('请复制以下订单号，在购买硬盘时填写在备注中，或发送给客服', '提交成功', {
+              this.$prompt('请复制以下单号，在下单硬盘时填写在备注中，或发送给客服', '提交成功', {
                 confirmButtonText: '确定',
                 inputValue: code,
                 center: true,
@@ -313,7 +316,7 @@
                   //请求成功，触发then中的函数
                   // console.log(res)  
                   const data = res.data
-                  const lineData = data.split('\n')
+                  const lineData = decodeURIComponent(atob(data)).split('\n')
                   lineData.forEach((value => {
                       var gameInfo = value.split('\,')
                       this.sourceData.push({
